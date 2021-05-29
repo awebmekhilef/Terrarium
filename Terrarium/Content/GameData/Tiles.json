@@ -1,0 +1,20 @@
+[
+	{
+		"id": 0,
+		"strId": "tile.air",
+		"name": "Air",
+		"texturePath": ""
+	},
+	{
+		"id": 1,
+		"strId": "tile.grass",
+		"name": "Grass",
+		"texturePath": "Textures/Grass"
+	},
+	{
+		"id": 2,
+		"strId": "tile.dirt",
+		"name": "Dirt",
+		"texturePath": "Textures/Dirt"
+	}
+]

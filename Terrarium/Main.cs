@@ -9,6 +9,8 @@ namespace Terrarium
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;
 
+		World _world;
+
 		public Main()
 		{
 			_graphics = new GraphicsDeviceManager(this);
@@ -20,6 +22,8 @@ namespace Terrarium
 		{
 			base.Initialize();
 
+			_world = new World(64, 32);
+
 			_graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
 			_graphics.ApplyChanges();
@@ -28,17 +32,27 @@ namespace Terrarium
 		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			GameData.Load(Content);
 		}
 
 		protected override void Update(GameTime gameTime)
 		{
 			if (Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
+
+			Window.Title = $"{1f / (float)gameTime.ElapsedGameTime.TotalSeconds}";
 		}
 
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.LightSkyBlue);
+
+			_spriteBatch.Begin();
+
+			_world.Draw(_spriteBatch);
+
+			_spriteBatch.End();
 		}
 	}
 }
