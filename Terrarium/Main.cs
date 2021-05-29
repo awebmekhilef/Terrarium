@@ -22,7 +22,7 @@ namespace Terrarium
 		{
 			base.Initialize();
 
-			_world = new World(64, 32);
+			_world = new World(1280 / 8, 720 / 8);
 
 			_graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
