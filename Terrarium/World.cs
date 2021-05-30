@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace Terrarium
 {
@@ -11,8 +10,8 @@ namespace Terrarium
 
 		int[,] _tiles;
 
-		const int MIN_GROUND_HEIGHT = 10;
-		const int MAX_GROUND_HEIGHT = 22;
+		const int MIN_GROUND_HEIGHT = 7;
+		const int MAX_GROUND_HEIGHT = 35;
 
 		public World(int width, int height)
 		{
@@ -20,7 +19,7 @@ namespace Terrarium
 			Height = height;
 
 			_tiles = new int[width, height];
-
+			
 			// Initialize with air tiles
 			for (int x = 0; x < Width; x++)
 			{
@@ -35,32 +34,15 @@ namespace Terrarium
 
 		void GenerateWorld()
 		{
-			int[] elevations = new int[Width];
-
 			// Offsets from top
 			int minOffset = Height - MAX_GROUND_HEIGHT;
 			int maxOffset = Height - MIN_GROUND_HEIGHT;
 
-			Random rand = new Random();
+			int[] elevations = new int[Width];
+			float[] values = NoiseGenerator.GenerateNoiseMap(Width, 15);
 
-			//Randomly ocsillate up or down
-			for (int i = 0; i < Width; i++)
-			{
-				// Move up or down
-				int dir = rand.Next(0, 2) == 1 ? 1 : -1;
-
-				if (i > 0)
-				{
-					if (elevations[i - 1] + dir > maxOffset || elevations[i - 1] + dir < minOffset)
-						dir *= -1;
-
-					elevations[i] = elevations[i - 1] + dir;
-				}
-				else
-				{
-					elevations[0] = rand.Next(minOffset, maxOffset);
-				}
-			}
+			for (int x = 0; x < Width; x++)
+				elevations[x] = (int)Util.Map(values[x], -1f, 1f, minOffset, maxOffset);
 
 			// Fill in tiles
 			for (int x = 0; x < Width; x++)
