@@ -5,29 +5,17 @@ namespace Terrarium
 {
 	public class World
 	{
-		public int Width { get; private set; }
-		public int Height { get; private set; }
-
 		int[,] _tiles;
 
 		const int MIN_GROUND_HEIGHT = 7;
 		const int MAX_GROUND_HEIGHT = 35;
 
-		public World(int width, int height)
-		{
-			Width = width;
-			Height = height;
+		const int WIDTH = 160;
+		const int HEIGHT = 90;
 
-			_tiles = new int[width, height];
-			
-			// Initialize with air tiles
-			for (int x = 0; x < Width; x++)
-			{
-				for (int y = 0; y < Height; y++)
-				{
-					_tiles[x, y] = GameData.GetTileIdFromStrId("tile.air");
-				}
-			}
+		public World()
+		{
+			_tiles = new int[WIDTH, HEIGHT];
 
 			GenerateWorld();
 		}
@@ -35,37 +23,49 @@ namespace Terrarium
 		void GenerateWorld()
 		{
 			// Offsets from top
-			int minOffset = Height - MAX_GROUND_HEIGHT;
-			int maxOffset = Height - MIN_GROUND_HEIGHT;
+			int minOffset = HEIGHT - MAX_GROUND_HEIGHT;
+			int maxOffset = HEIGHT - MIN_GROUND_HEIGHT;
 
-			int[] elevations = new int[Width];
-			float[] values = NoiseGenerator.GenerateNoiseMap(Width, 15);
+			// Generate noise map
+			int[] elevations = new int[WIDTH];
+			float[] values = NoiseGenerator.GenerateNoiseMap(WIDTH, 15);
 
-			for (int x = 0; x < Width; x++)
+			for (int x = 0; x < WIDTH; x++)
 				elevations[x] = (int)Util.Map(values[x], -1f, 1f, minOffset, maxOffset);
 
 			// Fill in tiles
-			for (int x = 0; x < Width; x++)
+			for (int x = 0; x < WIDTH; x++)
 			{
 				_tiles[x, elevations[x]] = GameData.GetTileIdFromStrId("tile.grass");
 
-				for (int y = elevations[x] + 1; y < Height; y++)
+				for (int y = elevations[x] + 1; y < HEIGHT; y++)
 					_tiles[x, y] = GameData.GetTileIdFromStrId("tile.dirt");
 			}
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			for (int x = 0; x < Width; x++)
+			for (int x = 0; x < WIDTH; x++)
 			{
-				for (int y = 0; y < Height; y++)
+				for (int y = 0; y < HEIGHT; y++)
 				{
 					int tileId = _tiles[x, y];
 
 					if (tileId != GameData.GetTileIdFromStrId("tile.air"))
-						spriteBatch.Draw(GameData.GetTileData(tileId).Texture, new Vector2(x * 8, y * 8), Color.White);
+					{
+						spriteBatch.Draw(GameData.GetTileData(tileId).Texture,
+							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE), Color.White);
+					}
 				}
 			}
+		}
+
+		public int GetTile(int x, int y)
+		{
+			if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+				return -1;
+
+			return _tiles[x, y];
 		}
 	}
 }

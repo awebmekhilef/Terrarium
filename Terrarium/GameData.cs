@@ -16,6 +16,11 @@ namespace Terrarium
 			_tileData = new Dictionary<int, TileData>();
 			_tilesStrId = new Dictionary<string, int>();
 
+			LoadTileData(content);
+		}
+
+		static void LoadTileData(ContentManager content)
+		{
 			using (StreamReader sr = new StreamReader("Content/GameData/Tiles.json"))
 			{
 				string json = sr.ReadToEnd();

@@ -2,6 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+/*
+ * TODO
+ * Debug drawing utility. Too hard to code without visualizing (commit)
+ */
+
 namespace Terrarium
 {
 	public class Main : Game
@@ -9,10 +14,14 @@ namespace Terrarium
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;
 
-		World _world;
+		public static Main Instance { get; private set; }
+
+		public World World { get; private set; }
 
 		public Main()
 		{
+			Instance = this;
+
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
@@ -22,7 +31,7 @@ namespace Terrarium
 		{
 			base.Initialize();
 
-			_world = new World(1280 / 8, 720 / 8);
+			World = new World();
 
 			_graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
@@ -41,7 +50,9 @@ namespace Terrarium
 			if (Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
-			Window.Title = $"{1f / (float)gameTime.ElapsedGameTime.TotalSeconds}";
+			float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+			Window.Title = $"{1f / dt}";
 		}
 
 		protected override void Draw(GameTime gameTime)
@@ -50,7 +61,7 @@ namespace Terrarium
 
 			_spriteBatch.Begin();
 
-			_world.Draw(_spriteBatch);
+			World.Draw(_spriteBatch);
 
 			_spriteBatch.End();
 		}
