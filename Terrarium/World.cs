@@ -10,12 +10,15 @@ namespace Terrarium
 		const int MIN_GROUND_HEIGHT = 7;
 		const int MAX_GROUND_HEIGHT = 35;
 
-		const int WIDTH = 160;
-		const int HEIGHT = 90;
+		public int Width { get; private set; }
+		public int Height { get; private set; }
 
 		public World()
 		{
-			_tiles = new int[WIDTH, HEIGHT];
+			Width = 1280 / TileData.TILE_SIZE;
+			Height = 720 / TileData.TILE_SIZE;
+
+			_tiles = new int[Width, Height];
 
 			GenerateWorld();
 		}
@@ -23,31 +26,31 @@ namespace Terrarium
 		void GenerateWorld()
 		{
 			// Offsets from top
-			int minOffset = HEIGHT - MAX_GROUND_HEIGHT;
-			int maxOffset = HEIGHT - MIN_GROUND_HEIGHT;
+			int minOffset = Height - MAX_GROUND_HEIGHT;
+			int maxOffset = Height - MIN_GROUND_HEIGHT;
 
 			// Generate noise map
-			int[] elevations = new int[WIDTH];
-			float[] values = NoiseGenerator.GenerateNoiseMap(WIDTH, 15);
+			int[] elevations = new int[Width];
+			float[] values = NoiseGenerator.GenerateNoiseMap(Width, 15);
 
-			for (int x = 0; x < WIDTH; x++)
+			for (int x = 0; x < Width; x++)
 				elevations[x] = (int)Util.Map(values[x], -1f, 1f, minOffset, maxOffset);
 
 			// Fill in tiles
-			for (int x = 0; x < WIDTH; x++)
+			for (int x = 0; x < Width; x++)
 			{
 				_tiles[x, elevations[x]] = GameData.GetTileIdFromStrId("tile.grass");
 
-				for (int y = elevations[x] + 1; y < HEIGHT; y++)
+				for (int y = elevations[x] + 1; y < Height; y++)
 					_tiles[x, y] = GameData.GetTileIdFromStrId("tile.dirt");
 			}
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			for (int x = 0; x < WIDTH; x++)
+			for (int x = 0; x < Width; x++)
 			{
-				for (int y = 0; y < HEIGHT; y++)
+				for (int y = 0; y < Height; y++)
 				{
 					int tileId = _tiles[x, y];
 
@@ -62,10 +65,16 @@ namespace Terrarium
 
 		public int GetTile(int x, int y)
 		{
-			if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+			if (x < 0 || x >= Width || y < 0 || y >= Height)
 				return -1;
 
 			return _tiles[x, y];
+		}
+
+		public Rectangle GetTileBounds(int x, int y)
+		{
+			int tileSize = TileData.TILE_SIZE;
+			return new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 		}
 	}
 }

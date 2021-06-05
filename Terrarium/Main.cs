@@ -2,11 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-/*
- * TODO
- * Debug drawing utility. Too hard to code without visualizing (commit)
- */
-
 namespace Terrarium
 {
 	public class Main : Game
@@ -52,6 +47,8 @@ namespace Terrarium
 
 			float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+			Input.Update();
+
 			Window.Title = $"{1f / dt}";
 		}
 
@@ -62,6 +59,8 @@ namespace Terrarium
 			_spriteBatch.Begin();
 
 			World.Draw(_spriteBatch);
+
+			DebugDraw.Draw(_spriteBatch);
 
 			_spriteBatch.End();
 		}
