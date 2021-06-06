@@ -12,6 +12,7 @@ namespace Terrarium
 		public static Main Instance { get; private set; }
 
 		public World World { get; private set; }
+		public Camera Camera { get; private set; }
 
 		public Main()
 		{
@@ -20,13 +21,17 @@ namespace Terrarium
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
+
+			IsFixedTimeStep = false;
+			_graphics.SynchronizeWithVerticalRetrace = false;
 		}
 
 		protected override void Initialize()
 		{
 			base.Initialize();
 
-			World = new World();
+			World = new World(512, 256);
+			Camera = new Camera(new Vector2(World.Width * TileData.TILE_SIZE / 2f, World.Height * TileData.TILE_SIZE / 2f));
 
 			_graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
@@ -49,6 +54,8 @@ namespace Terrarium
 
 			Input.Update();
 
+			Camera.Update(dt);
+
 			Window.Title = $"{1f / dt}";
 		}
 
@@ -56,7 +63,7 @@ namespace Terrarium
 		{
 			GraphicsDevice.Clear(Color.LightSkyBlue);
 
-			_spriteBatch.Begin();
+			_spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Camera.TransformMatrix);
 
 			World.Draw(_spriteBatch);
 

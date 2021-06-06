@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Terrarium
 {
@@ -7,18 +8,21 @@ namespace Terrarium
 	{
 		int[,] _tiles;
 
-		const int MIN_GROUND_HEIGHT = 7;
-		const int MAX_GROUND_HEIGHT = 35;
+		const int MIN_GROUND_HEIGHT = 48;
+		const int MAX_GROUND_HEIGHT = 128;
 
 		public int Width { get; private set; }
 		public int Height { get; private set; }
 
-		public World()
+		Random _rand;
+
+		public World(int width, int height)
 		{
-			Width = 1280 / TileData.TILE_SIZE;
-			Height = 720 / TileData.TILE_SIZE;
+			Width = width;
+			Height = height;
 
 			_tiles = new int[Width, Height];
+			_rand = new Random();
 
 			GenerateWorld();
 		}
@@ -29,9 +33,9 @@ namespace Terrarium
 			int minOffset = Height - MAX_GROUND_HEIGHT;
 			int maxOffset = Height - MIN_GROUND_HEIGHT;
 
-			// Generate noise map
+			// Generate elevations
 			int[] elevations = new int[Width];
-			float[] values = NoiseGenerator.GenerateNoiseMap(Width, 15);
+			float[] values = NoiseGenerator.GenerateNoiseMap(Width, 100, 6, 0.5f, 2f);
 
 			for (int x = 0; x < Width; x++)
 				elevations[x] = (int)Util.Map(values[x], -1f, 1f, minOffset, maxOffset);
@@ -44,6 +48,29 @@ namespace Terrarium
 				for (int y = elevations[x] + 1; y < Height; y++)
 					_tiles[x, y] = GameData.GetTileIdFromStrId("tile.dirt");
 			}
+
+			// Create ores
+			for (int i = 0; i < Width * Height / 1200; i++)
+				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.stone"), _rand.Next(3, 4));
+
+			for (int i = 0; i < Width * Height / 1200; i++)
+				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.copper"), _rand.Next(3, 5));
+		}
+
+		void CreateOreVein(int x, int y, int tileId, int size)
+		{
+			if (GetTile(x, y) <= 0 || size <= 0)
+				return;
+
+			if (_rand.Next(0, 10) == 0)
+				size += 1;
+
+			_tiles[x, y] = tileId;
+
+			CreateOreVein(x + 1, y, tileId, size - 1);
+			CreateOreVein(x - 1, y, tileId, size - 1);
+			CreateOreVein(x, y + 1, tileId, size - 1);
+			CreateOreVein(x, y - 1, tileId, size - 1);
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
@@ -61,6 +88,8 @@ namespace Terrarium
 					}
 				}
 			}
+
+			DebugDraw.AddRect(new Rectangle(0, 0, Width * TileData.TILE_SIZE, Height * TileData.TILE_SIZE), Color.Blue);
 		}
 
 		public int GetTile(int x, int y)
@@ -69,12 +98,6 @@ namespace Terrarium
 				return -1;
 
 			return _tiles[x, y];
-		}
-
-		public Rectangle GetTileBounds(int x, int y)
-		{
-			int tileSize = TileData.TILE_SIZE;
-			return new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 		}
 	}
 }

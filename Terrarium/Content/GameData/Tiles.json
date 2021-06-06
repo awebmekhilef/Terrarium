@@ -16,5 +16,17 @@
 		"strId": "tile.dirt",
 		"name": "Dirt",
 		"texturePath": "Textures/Dirt"
+	},
+	{
+		"id": 3,
+		"strId": "tile.stone",
+		"name": "Stone",
+		"texturePath": "Textures/Stone"
+	},
+	{
+		"id": 4,
+		"strId": "tile.copper",
+		"name": "Copper",
+		"texturePath": "Textures/Copper"
 	}
 ]

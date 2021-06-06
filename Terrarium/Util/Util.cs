@@ -5,9 +5,14 @@ namespace Terrarium
 {
 	public static class Util
 	{
-		public static float Map(float value, float fromSource, float toSource, float fromTarget, float toTarget)
+		public static float Map(float v, float iMin, float iMax, float oMin, float oMax)
 		{
-			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
+			return (v - iMin) / (iMax - iMin) * (oMax - oMin) + oMin;
+		}
+
+		public static float InverseLerp(float a, float b, float v)
+		{
+			return (v - a) / (b - a);
 		}
 
 		public static Vector2 GetIntersectionDepth(Rectangle rectA, Rectangle rectB)
