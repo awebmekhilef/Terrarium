@@ -87,9 +87,16 @@ namespace Terrarium
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			for (int x = 0; x < Width; x++)
+			Camera cam = Main.Instance.Camera;
+
+			int left = Math.Max(0, cam.Bounds.Left / TileData.TILE_SIZE);
+			int right = Math.Min(Width - 1, cam.Bounds.Right / TileData.TILE_SIZE) + 1;
+			int top = Math.Max(0, cam.Bounds.Top / TileData.TILE_SIZE);
+			int bottom = Math.Min(Height - 1, cam.Bounds.Bottom / TileData.TILE_SIZE) + 1;
+
+			for (int x = left; x < right; x++)
 			{
-				for (int y = 0; y < Height; y++)
+				for (int y = top; y < bottom; y++)
 				{
 					int tileId = _tiles[x, y];
 
