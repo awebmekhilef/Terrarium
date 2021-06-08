@@ -9,7 +9,7 @@ namespace Terrarium
 		float _zoom = 0.25f;
 
 		const float ZOOM_SPEED = 3f;
-		const float MOVE_SPEED = 500f;
+		const float MOVE_SPEED = 700f;
 
 		public Camera(Vector2 position)
 		{

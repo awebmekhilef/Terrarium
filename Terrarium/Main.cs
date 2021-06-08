@@ -22,15 +22,15 @@ namespace Terrarium
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 
-			IsFixedTimeStep = false;
-			_graphics.SynchronizeWithVerticalRetrace = false;
+			//IsFixedTimeStep = false;
+			//_graphics.SynchronizeWithVerticalRetrace = false;
 		}
 
 		protected override void Initialize()
 		{
 			base.Initialize();
 
-			World = new World(512, 256);
+			World = new World(512, 512);
 			Camera = new Camera(new Vector2(World.Width * TileData.TILE_SIZE / 2f, World.Height * TileData.TILE_SIZE / 2f));
 
 			_graphics.PreferredBackBufferWidth = 1280;

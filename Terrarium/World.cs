@@ -8,8 +8,8 @@ namespace Terrarium
 	{
 		int[,] _tiles;
 
-		const int MIN_GROUND_HEIGHT = 48;
-		const int MAX_GROUND_HEIGHT = 128;
+		const int MIN_GROUND_HEIGHT = 192;
+		const int MAX_GROUND_HEIGHT = 256;
 
 		public int Width { get; private set; }
 		public int Height { get; private set; }
@@ -35,10 +35,10 @@ namespace Terrarium
 
 			// Generate elevations
 			int[] elevations = new int[Width];
-			float[] values = NoiseGenerator.GenerateNoiseMap(Width, 100, 6, 0.5f, 2f);
+			float[,] elevationNoise = NoiseGenerator.GenerateNoiseMap(Width, 1, 100f, 4, 0.5f, 2f);
 
 			for (int x = 0; x < Width; x++)
-				elevations[x] = (int)Util.Map(values[x], -1f, 1f, minOffset, maxOffset);
+				elevations[x] = (int)Util.Map(elevationNoise[x, 0], 0f, 1f, minOffset, maxOffset);
 
 			// Fill in tiles
 			for (int x = 0; x < Width; x++)
@@ -49,9 +49,21 @@ namespace Terrarium
 					_tiles[x, y] = GameData.GetTileIdFromStrId("tile.dirt");
 			}
 
+			// Create caves
+			float[,] caveNoise = NoiseGenerator.GenerateNoiseMap(Width, Height - minOffset, 70, 3, 0.35f, 2f);
+
+			for (int x = 0; x < Width; x++)
+			{
+				for (int y = 0; y < Height - minOffset; y++)
+				{
+					if (caveNoise[x, y] > 0.5f && caveNoise[x, y] < 0.6f)
+						_tiles[x, minOffset + y] = GameData.GetTileIdFromStrId("tile.air");
+				}
+			}
+
 			// Create ores
 			for (int i = 0; i < Width * Height / 1200; i++)
-				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.stone"), _rand.Next(3, 4));
+				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.stone"), _rand.Next(3, 5));
 
 			for (int i = 0; i < Width * Height / 1200; i++)
 				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.copper"), _rand.Next(3, 5));
