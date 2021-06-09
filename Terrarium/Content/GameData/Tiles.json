@@ -1,30 +1,24 @@
 [
 	{
 		"id": 0,
-		"strId": "tile.air",
-		"name": "Air",
-		"texturePath": ""
-	},
-	{
-		"id": 1,
 		"strId": "tile.grass",
 		"name": "Grass",
 		"texturePath": "Textures/Grass"
 	},
 	{
-		"id": 2,
+		"id": 1,
 		"strId": "tile.dirt",
 		"name": "Dirt",
 		"texturePath": "Textures/Dirt"
 	},
 	{
-		"id": 3,
+		"id": 2,
 		"strId": "tile.stone",
 		"name": "Stone",
 		"texturePath": "Textures/Stone"
 	},
 	{
-		"id": 4,
+		"id": 3,
 		"strId": "tile.copper",
 		"name": "Copper",
 		"texturePath": "Textures/Copper"

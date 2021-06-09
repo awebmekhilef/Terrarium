@@ -22,6 +22,16 @@ namespace Terrarium
 			Height = height;
 
 			_tiles = new int[Width, Height];
+
+			// Initialze with air tiles
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					_tiles[x, y] = -1;
+				}
+			}
+
 			_rand = new Random();
 
 			GenerateWorld();
@@ -57,7 +67,7 @@ namespace Terrarium
 				for (int y = 0; y < Height - minOffset; y++)
 				{
 					if (caveNoise[x, y] > 0.5f && caveNoise[x, y] < 0.6f)
-						_tiles[x, minOffset + y] = GameData.GetTileIdFromStrId("tile.air");
+						_tiles[x, minOffset + y] = -1;
 				}
 			}
 
@@ -71,7 +81,7 @@ namespace Terrarium
 
 		void CreateOreVein(int x, int y, int tileId, int size)
 		{
-			if (GetTile(x, y) <= 0 || size <= 0)
+			if (GetTile(x, y) == -1 || size <= 0)
 				return;
 
 			if (_rand.Next(0, 10) == 0)
@@ -100,7 +110,7 @@ namespace Terrarium
 				{
 					int tileId = _tiles[x, y];
 
-					if (tileId != GameData.GetTileIdFromStrId("tile.air"))
+					if (tileId != -1)
 					{
 						spriteBatch.Draw(GameData.GetTileData(tileId).Texture,
 							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE), Color.White);

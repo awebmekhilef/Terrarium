@@ -31,16 +31,11 @@ namespace Terrarium
 					int id = int.Parse(tileDict["id"]);
 					string texturePath = tileDict["texturePath"];
 
-					Texture2D texture = null;
-
-					if (!string.IsNullOrEmpty(texturePath))
-						texture = content.Load<Texture2D>(texturePath);
-
 					_tileData.Add(
 						id,
 						new TileData(
 							tileDict["name"],
-							texture
+							content.Load<Texture2D>(texturePath)
 						)
 					);
 
