@@ -1,0 +1,8 @@
+[
+	{
+		"id": 0,
+		"strId": "wall.dirt",
+		"name": "Dirt Wall",
+		"texturePath": "Textures/Walls/Dirt"
+	}
+]

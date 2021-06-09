@@ -7,6 +7,7 @@ namespace Terrarium
 	public class World
 	{
 		int[,] _tiles;
+		int[,] _walls;
 
 		const int MIN_GROUND_HEIGHT = 192;
 		const int MAX_GROUND_HEIGHT = 256;
@@ -22,13 +23,15 @@ namespace Terrarium
 			Height = height;
 
 			_tiles = new int[Width, Height];
+			_walls = new int[Width, Height];
 
-			// Initialze with air tiles
+			// Initialze with air tiles/walls
 			for (int x = 0; x < width; x++)
 			{
 				for (int y = 0; y < height; y++)
 				{
 					_tiles[x, y] = -1;
+					_walls[x, y] = -1;
 				}
 			}
 
@@ -50,17 +53,21 @@ namespace Terrarium
 			for (int x = 0; x < Width; x++)
 				elevations[x] = (int)Util.Map(elevationNoise[x, 0], 0f, 1f, minOffset, maxOffset);
 
-			// Fill in tiles
+			// Fill in tiles/walls
 			for (int x = 0; x < Width; x++)
 			{
 				_tiles[x, elevations[x]] = GameData.GetTileIdFromStrId("tile.grass");
+				_walls[x, elevations[x]] = GameData.GetWallIdFromStrId("wall.dirt");
 
 				for (int y = elevations[x] + 1; y < Height; y++)
+				{
 					_tiles[x, y] = GameData.GetTileIdFromStrId("tile.dirt");
+					_walls[x, y] = GameData.GetWallIdFromStrId("wall.dirt");
+				}
 			}
 
 			// Create caves
-			float[,] caveNoise = NoiseGenerator.GenerateNoiseMap(Width, Height - minOffset, 70, 3, 0.35f, 2f);
+			float[,] caveNoise = NoiseGenerator.GenerateNoiseMap(Width, Height - minOffset, 70, 5, 0.35f, 2f);
 
 			for (int x = 0; x < Width; x++)
 			{
@@ -109,10 +116,16 @@ namespace Terrarium
 				for (int y = top; y < bottom; y++)
 				{
 					int tileId = _tiles[x, y];
+					int wallId = _walls[x, y];
 
 					if (tileId != -1)
 					{
 						spriteBatch.Draw(GameData.GetTileData(tileId).Texture,
+							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE), Color.White);
+					}
+					else if (wallId != -1)
+					{
+						spriteBatch.Draw(GameData.GetWallData(wallId).Texture,
 							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE), Color.White);
 					}
 				}
@@ -127,6 +140,14 @@ namespace Terrarium
 				return -1;
 
 			return _tiles[x, y];
+		}
+		
+		public int GetWall(int x, int y)
+		{
+			if (x < 0 || x >= Width || y < 0 || y >= Height)
+				return -1;
+
+			return _walls[x, y];
 		}
 	}
 }

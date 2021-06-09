@@ -3,24 +3,24 @@
 		"id": 0,
 		"strId": "tile.grass",
 		"name": "Grass",
-		"texturePath": "Textures/Grass"
+		"texturePath": "Textures/Tiles/Grass"
 	},
 	{
 		"id": 1,
 		"strId": "tile.dirt",
 		"name": "Dirt",
-		"texturePath": "Textures/Dirt"
+		"texturePath": "Textures/Tiles/Dirt"
 	},
 	{
 		"id": 2,
 		"strId": "tile.stone",
 		"name": "Stone",
-		"texturePath": "Textures/Stone"
+		"texturePath": "Textures/Tiles/Stone"
 	},
 	{
 		"id": 3,
 		"strId": "tile.copper",
 		"name": "Copper",
-		"texturePath": "Textures/Copper"
+		"texturePath": "Textures/Tiles/Copper"
 	}
 ]
