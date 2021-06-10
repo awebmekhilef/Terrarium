@@ -13,6 +13,7 @@ namespace Terrarium
 
 		public World World { get; private set; }
 		public Camera Camera { get; private set; }
+		public Player Player { get; private set; }
 
 		public Main()
 		{
@@ -32,6 +33,7 @@ namespace Terrarium
 
 			World = new World(512, 512);
 			Camera = new Camera(new Vector2(World.Width * TileData.TILE_SIZE / 2f, World.Height * TileData.TILE_SIZE / 2f));
+			Player = new Player();
 
 			_graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
@@ -54,6 +56,7 @@ namespace Terrarium
 
 			Input.Update();
 
+			Player.Update();
 			Camera.Update(dt);
 
 			Window.Title = $"{1f / dt}";
