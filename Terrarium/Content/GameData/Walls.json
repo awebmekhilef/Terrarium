@@ -4,5 +4,17 @@
 		"strId": "wall.dirt",
 		"name": "Dirt Wall",
 		"texturePath": "Textures/Walls/Dirt"
+	},
+	{
+		"id": 1,
+		"strId": "wall.trunk",
+		"name": "Trunk",
+		"texturePath": "Textures/Walls/Trunk"
+	},
+	{
+		"id": 2,
+		"strId": "wall.leaves",
+		"name": "Leaves",
+		"texturePath": "Textures/Walls/Leaves"
 	}
 ]

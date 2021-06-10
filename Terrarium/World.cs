@@ -11,6 +11,7 @@ namespace Terrarium
 
 		const int MIN_GROUND_HEIGHT = 192;
 		const int MAX_GROUND_HEIGHT = 256;
+		const int TREE_DENSITY = 5;
 
 		public int Width { get; private set; }
 		public int Height { get; private set; }
@@ -66,6 +67,7 @@ namespace Terrarium
 				}
 			}
 
+
 			// Create caves
 			float[,] caveNoise = NoiseGenerator.GenerateNoiseMap(Width, Height - minOffset, 70, 5, 0.35f, 2f);
 
@@ -75,6 +77,16 @@ namespace Terrarium
 				{
 					if (caveNoise[x, y] > 0.5f && caveNoise[x, y] < 0.6f)
 						_tiles[x, minOffset + y] = -1;
+				}
+			}
+
+			// Create trees
+			for (int i = 0; i < Width / TREE_DENSITY; i++)
+			{
+				if (_rand.Next(0, 2) == 0)
+				{
+					int x = i * TREE_DENSITY;
+					CreateTree(x, elevations[x] - 1, _rand.Next(7, 15));
 				}
 			}
 
@@ -100,6 +112,34 @@ namespace Terrarium
 			CreateOreVein(x - 1, y, tileId, size - 1);
 			CreateOreVein(x, y + 1, tileId, size - 1);
 			CreateOreVein(x, y - 1, tileId, size - 1);
+		}
+
+		void CreateTree(int x, int y, int height)
+		{
+			// Check if has grass tile below
+			if (GetTile(x, y + 1) != GameData.GetTileIdFromStrId("tile.grass"))
+				return;
+
+			int top = y - height - 1;
+			int trunkId = GameData.GetWallIdFromStrId("wall.trunk");
+			int leavesId = GameData.GetWallIdFromStrId("wall.leaves");
+
+			// Create trunk
+			for (int i = y; i >= top; i--)
+				_walls[x, i] = trunkId;
+
+			// Create canopy
+			SetWall(x - 1, top, leavesId);
+			SetWall(x + 1, top, leavesId);
+
+			for (int i = -2; i < 3; i++)
+				SetWall(x - i, top - 1, leavesId);
+
+			for (int i = -2; i < 3; i++)
+				SetWall(x - i, top - 2, leavesId);
+
+			for (int i = -1; i < 2; i++)
+				SetWall(x - i, top - 3, leavesId);
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
@@ -141,13 +181,29 @@ namespace Terrarium
 
 			return _tiles[x, y];
 		}
-		
+
 		public int GetWall(int x, int y)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
 				return -1;
 
 			return _walls[x, y];
+		}
+
+		public void SetTile(int x, int y, int id)
+		{
+			if (x < 0 || x >= Width || y < 0 || y >= Height)
+				return;
+
+			_tiles[x, y] = id;
+		}
+
+		public void SetWall(int x, int y, int id)
+		{
+			if (x < 0 || x >= Width || y < 0 || y >= Height)
+				return;
+
+			_walls[x, y] = id;
 		}
 	}
 }
