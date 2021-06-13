@@ -28,57 +28,51 @@ namespace Terrarium
 
 		static void LoadTileData(ContentManager content)
 		{
-			using (StreamReader sr = new StreamReader("Content/GameData/Tiles.json"))
+			string json = File.ReadAllText("Content/GameData/Tiles.json");
+			var tileDictArray = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(json);
+
+			foreach (var tileDict in tileDictArray)
 			{
-				string json = sr.ReadToEnd();
-				var tileDictArray = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(json);
+				int id = int.Parse(tileDict["id"]);
+				string texturePath = tileDict["texturePath"];
 
-				foreach (var tileDict in tileDictArray)
-				{
-					int id = int.Parse(tileDict["id"]);
-					string texturePath = tileDict["texturePath"];
+				_tileData.Add(
+					id,
+					new TileData(
+						tileDict["name"],
+						content.Load<Texture2D>(texturePath)
+					)
+				);
 
-					_tileData.Add(
-						id,
-						new TileData(
-							tileDict["name"],
-							content.Load<Texture2D>(texturePath)
-						)
-					);
-
-					_tilesStrId.Add(
-						tileDict["strId"],
-						id
-					);
-				}
+				_tilesStrId.Add(
+					tileDict["strId"],
+					id
+				);
 			}
 		}
 
 		static void LoadWallData(ContentManager content)
 		{
-			using (StreamReader sr = new StreamReader("Content/GameData/Walls.json"))
+			string json = File.ReadAllText("Content/GameData/Walls.json");
+			var wallDictArray = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(json);
+
+			foreach (var wallDict in wallDictArray)
 			{
-				string json = sr.ReadToEnd();
-				var wallDictArray = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(json);
+				int id = int.Parse(wallDict["id"]);
+				string texturePath = wallDict["texturePath"];
 
-				foreach (var wallDict in wallDictArray)
-				{
-					int id = int.Parse(wallDict["id"]);
-					string texturePath = wallDict["texturePath"];
+				_wallData.Add(
+					id,
+					new TileData(
+						wallDict["name"],
+						content.Load<Texture2D>(texturePath)
+					)
+				);
 
-					_wallData.Add(
-						id,
-						new TileData(
-							wallDict["name"],
-							content.Load<Texture2D>(texturePath)
-						)
-					);
-
-					_wallsStrId.Add(
-						wallDict["strId"],
-						id
-					);
-				}
+				_wallsStrId.Add(
+					wallDict["strId"],
+					id
+				);
 			}
 		}
 
