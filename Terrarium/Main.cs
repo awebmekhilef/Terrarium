@@ -9,16 +9,12 @@ namespace Terrarium
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;
 
-		public static Main Instance { get; private set; }
-
-		public World World { get; private set; }
-		public Camera Camera { get; private set; }
-		public Player Player { get; private set; }
+		public static World World { get; private set; }
+		public static Camera Camera { get; private set; }
+		public static Player Player { get; private set; }
 
 		public Main()
 		{
-			Instance = this;
-
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;

@@ -144,7 +144,7 @@ namespace Terrarium
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			Camera cam = Main.Instance.Camera;
+			Camera cam = Main.Camera;
 
 			int left = Math.Max(0, cam.Bounds.Left / TileData.TILE_SIZE);
 			int right = Math.Min(Width - 1, cam.Bounds.Right / TileData.TILE_SIZE) + 1;

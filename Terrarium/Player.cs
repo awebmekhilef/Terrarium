@@ -12,8 +12,8 @@ namespace Terrarium
 
 		public Player()
 		{
-			_world = Main.Instance.World;
-			_cam = Main.Instance.Camera;
+			_world = Main.World;
+			_cam = Main.Camera;
 		}
 
 		public void Update()
