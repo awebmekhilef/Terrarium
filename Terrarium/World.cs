@@ -67,7 +67,6 @@ namespace Terrarium
 				}
 			}
 
-
 			// Create caves
 			float[,] caveNoise = NoiseGenerator.GenerateNoiseMap(Width, Height - minOffset, 70, 5, 0.35f, 2f);
 
@@ -80,6 +79,13 @@ namespace Terrarium
 				}
 			}
 
+			// Create ores
+			for (int i = 0; i < Width * Height / 1200; i++)
+				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.stone"), _rand.Next(3, 5));
+
+			for (int i = 0; i < Width * Height / 1200; i++)
+				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.copper"), _rand.Next(3, 5));
+
 			// Create trees
 			for (int i = 0; i < Width / TREE_DENSITY; i++)
 			{
@@ -89,13 +95,6 @@ namespace Terrarium
 					CreateTree(x, elevations[x] - 1, _rand.Next(7, 15));
 				}
 			}
-
-			// Create ores
-			for (int i = 0; i < Width * Height / 1200; i++)
-				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.stone"), _rand.Next(3, 5));
-
-			for (int i = 0; i < Width * Height / 1200; i++)
-				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.copper"), _rand.Next(3, 5));
 		}
 
 		void CreateOreVein(int x, int y, int tileId, int size)
@@ -170,8 +169,6 @@ namespace Terrarium
 					}
 				}
 			}
-
-			DebugDraw.AddRect(new Rectangle(0, 0, Width * TileData.TILE_SIZE, Height * TileData.TILE_SIZE), Color.Blue);
 		}
 
 		public int GetTile(int x, int y)

@@ -6,10 +6,9 @@ namespace Terrarium
 	public class Camera
 	{
 		Vector2 _pos;
-		float _zoom = 0.25f;
+		float _zoom = 2.5f;
 
-		const float ZOOM_SPEED = 3f;
-		const float MOVE_SPEED = 700f;
+		const float MOVE_SPEED = 500f;
 
 		public Camera(Vector2 position)
 		{
@@ -18,9 +17,15 @@ namespace Terrarium
 
 		public void Update(float dt)
 		{
-			_zoom += Input.ScrollWheelDelta * ZOOM_SPEED * dt;
+			// Zooming
+			if (Input.IsKeyDown(Keys.OemPlus))
+				_zoom += 0.25f;
+			else if(Input.IsKeyDown(Keys.OemMinus))
+				_zoom -= 0.25f;
+
 			_zoom = MathHelper.Clamp(_zoom, 0.25f, 5f);
 
+			// Movement
 			if (Input.IsKeyHeld(Keys.A))
 				_pos.X -= MOVE_SPEED * dt;
 			else if (Input.IsKeyHeld(Keys.D))
