@@ -10,14 +10,14 @@
 		"id": 1,
 		"strId": "wall.trunk",
 		"name": "Trunk",
-		"mergeWalls": "wall.trunk,wall.leaves",
+		"mergeWalls": "wall.trunk,wall.leaves,wall.dirt",
 		"texturePath": "Textures/Walls/Trunk"
 	},
 	{
 		"id": 2,
 		"strId": "wall.leaves",
 		"name": "Leaves",
-		"mergeWalls": "wall.leaves.wall.trunk",
+		"mergeWalls": "wall.leaves,wall.trunk",
 		"texturePath": "Textures/Walls/Leaves"
 	}
 ]

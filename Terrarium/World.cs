@@ -21,6 +21,8 @@ namespace Terrarium
 
 		public World(int width, int height)
 		{
+			Console.WriteLine(CanWallMerge(1,0));
+
 			Width = width;
 			Height = height;
 
@@ -196,8 +198,8 @@ namespace Terrarium
 			if (wallId1 == -1 || wallId2 == -1)
 				return false;
 
-			TileData wall1 = GameData.GetTileData(wallId1);
-			TileData wall2 = GameData.GetTileData(wallId2);
+			TileData wall1 = GameData.GetWallData(wallId1);
+			TileData wall2 = GameData.GetWallData(wallId2);
 
 			return Array.Exists(wall1.MergeTileStrIds, s => s == wall2.StrId) ||
 				Array.Exists(wall2.MergeTileStrIds, s => s == wall1.StrId);
