@@ -21,8 +21,6 @@ namespace Terrarium
 
 		public World(int width, int height)
 		{
-			Console.WriteLine(CanWallMerge(1,0));
-
 			Width = width;
 			Height = height;
 

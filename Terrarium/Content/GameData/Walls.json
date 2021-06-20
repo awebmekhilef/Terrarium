@@ -19,5 +19,12 @@
 		"name": "Leaves",
 		"mergeWalls": "wall.leaves,wall.trunk",
 		"texturePath": "Textures/Walls/Leaves"
+	},
+	{
+		"id": 3,
+		"strId": "wall.wood",
+		"name": "Wood Wall",
+		"mergeWalls": "wall.wood,wall.dirt",
+		"texturePath": "Textures/Walls/Wood"
 	}
 ]

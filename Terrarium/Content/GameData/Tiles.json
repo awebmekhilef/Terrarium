@@ -26,5 +26,12 @@
 		"name": "Copper",
 		"mergeTiles": "tile.copper",
 		"texturePath": "Textures/Tiles/Copper"
+	},
+	{
+		"id": 4,
+		"strId": "tile.wood",
+		"name": "Wood",
+		"mergeTiles": "tile.wood,tile.grass,tile.dirt",
+		"texturePath": "Textures/Tiles/Wood"
 	}
 ]
