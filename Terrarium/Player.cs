@@ -8,7 +8,7 @@ namespace Terrarium
 		World _world;
 		Camera _cam;
 
-		int _currTileId = 0;
+		int _currTileId = 1;
 
 		public Player()
 		{
@@ -29,12 +29,10 @@ namespace Terrarium
 
 			// Select current tile
 			if (Input.IsKeyDown(Keys.D1))
-				_currTileId = GameData.GetTileIdFromStrId("tile.grass");
-			else if (Input.IsKeyDown(Keys.D2))
 				_currTileId = GameData.GetTileIdFromStrId("tile.dirt");
-			else if (Input.IsKeyDown(Keys.D3))
+			else if (Input.IsKeyDown(Keys.D2))
 				_currTileId = GameData.GetTileIdFromStrId("tile.stone");
-			else if (Input.IsKeyDown(Keys.D4))
+			else if (Input.IsKeyDown(Keys.D3))
 				_currTileId = GameData.GetTileIdFromStrId("tile.copper");
 		}
 	}

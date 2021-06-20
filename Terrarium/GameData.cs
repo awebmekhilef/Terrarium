@@ -8,6 +8,9 @@ namespace Terrarium
 {
 	public static class GameData
 	{
+		public static Texture2D TileMasks	{ get; private set; }
+		public static Effect TileMaskEffect { get; private set; }
+
 		static Dictionary<int, TileData> _tileData;
 		static Dictionary<string, int> _tilesStrId;
 
@@ -22,8 +25,20 @@ namespace Terrarium
 			_wallData = new Dictionary<int, TileData>();
 			_wallsStrId = new Dictionary<string, int>();
 
+			LoadEffects	(content);
+			LoadTextures(content);
 			LoadTileData(content);
 			LoadWallData(content);
+		}
+
+		static void LoadEffects(ContentManager content)
+		{
+			TileMaskEffect = content.Load<Effect>("Effects/TileMaskEffect");
+		}
+
+		static void LoadTextures(ContentManager content)
+		{
+			TileMasks = content.Load<Texture2D>("Textures/TileMasks");
 		}
 
 		static void LoadTileData(ContentManager content)
@@ -34,18 +49,24 @@ namespace Terrarium
 			foreach (var tileDict in tileDictArray)
 			{
 				int id = int.Parse(tileDict["id"]);
+
+				string name = tileDict["name"];
+				string strId = tileDict["strId"];
 				string texturePath = tileDict["texturePath"];
+				string mergeStrIds = tileDict["mergeTiles"];
 
 				_tileData.Add(
 					id,
 					new TileData(
-						tileDict["name"],
-						content.Load<Texture2D>(texturePath)
+						name,
+						strId,
+						content.Load<Texture2D>(texturePath),
+						mergeStrIds.Split(",")
 					)
 				);
 
 				_tilesStrId.Add(
-					tileDict["strId"],
+					strId,
 					id
 				);
 			}
@@ -59,18 +80,24 @@ namespace Terrarium
 			foreach (var wallDict in wallDictArray)
 			{
 				int id = int.Parse(wallDict["id"]);
+
+				string name = wallDict["name"];
+				string strId = wallDict["strId"];
 				string texturePath = wallDict["texturePath"];
+				string mergeStrIds = wallDict["mergeWalls"];
 
 				_wallData.Add(
 					id,
 					new TileData(
-						wallDict["name"],
-						content.Load<Texture2D>(texturePath)
+						name,
+						strId,
+						content.Load<Texture2D>(texturePath),
+						mergeStrIds.Split(",")
 					)
 				);
 
 				_wallsStrId.Add(
-					wallDict["strId"],
+					strId,
 					id
 				);
 			}

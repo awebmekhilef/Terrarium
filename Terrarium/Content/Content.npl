@@ -1,11 +1,9 @@
 {
 	"root": "",
-	"references":
-	[
+	"references": [
 
 	],
-	"content":
-	{
+	"content": {
 		"textures": {
 			"path": "Textures/*.png",
 			"recursive": "True",
@@ -21,6 +19,13 @@
 				"MakeSquare": "False",
 				"TextureFormat": "Color"
 			}
+		},
+		"effects": {
+			"path": "Effects/*.fx",
+			"recursive": "True",
+			"action": "build",
+			"importer": "EffectImporter",
+			"processor": "EffectProcessor"
 		},
 		"gameData": {
 			"path": "GameData/*.json",

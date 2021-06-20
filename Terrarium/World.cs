@@ -17,6 +17,7 @@ namespace Terrarium
 		public int Height { get; private set; }
 
 		Random _rand;
+		Rectangle[] _tileMaskRects;
 
 		public World(int width, int height)
 		{
@@ -37,6 +38,7 @@ namespace Terrarium
 			}
 
 			_rand = new Random();
+			_tileMaskRects = Util.RectsFromTexture(GameData.TileMasks, 8, 8);
 
 			GenerateWorld();
 		}
@@ -141,7 +143,67 @@ namespace Terrarium
 				SetWall(x - i, top - 3, leavesId);
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
+		int GetTileMaskIndex(int x, int y, int tileId)
+		{
+			// Get adjacent tiles (NWES)
+			int[] adjTiles = new int[] { 0, 0, 0, 0 };
+
+			if (CanTileMerge(GetTile(x, y - 1), tileId))
+				adjTiles[0] = 1;
+			if (CanTileMerge(GetTile(x - 1, y), tileId))
+				adjTiles[1] = 1;
+			if (CanTileMerge(GetTile(x + 1, y), tileId))
+				adjTiles[2] = 1;
+			if (CanTileMerge(GetTile(x, y + 1), tileId))
+				adjTiles[3] = 1;
+
+			// Calculate mask
+			return adjTiles[0] + adjTiles[1] * 2 + adjTiles[2] * 4 + adjTiles[3] * 8;
+		}
+
+		bool CanTileMerge(int tileId1, int tileId2)
+		{
+			if (tileId1 == -1 || tileId2 == -1)
+				return false;
+
+			TileData tile1 = GameData.GetTileData(tileId1);
+			TileData tile2 = GameData.GetTileData(tileId2);
+
+			return Array.Exists(tile1.MergeTileStrIds, s => s == tile2.StrId) ||
+				Array.Exists(tile2.MergeTileStrIds, s => s == tile1.StrId);
+		}
+
+		int GetWallMaskIndex(int x, int y, int wallId)
+		{
+			// Get adjacent walls (NWES)
+			int[] adjWalls = new int[] { 0, 0, 0, 0 };
+
+			if (CanWallMerge(GetWall(x, y - 1), wallId))
+				adjWalls[0] = 1;
+			if (CanWallMerge(GetWall(x - 1, y), wallId))
+				adjWalls[1] = 1;
+			if (CanWallMerge(GetWall(x + 1, y), wallId))
+				adjWalls[2] = 1;
+			if (CanWallMerge(GetWall(x, y + 1), wallId))
+				adjWalls[3] = 1;
+
+			// Calculate mask
+			return adjWalls[0] + adjWalls[1] * 2 + adjWalls[2] * 4 + adjWalls[3] * 8;
+		}
+
+		bool CanWallMerge(int wallId1, int wallId2)
+		{
+			if (wallId1 == -1 || wallId2 == -1)
+				return false;
+
+			TileData wall1 = GameData.GetTileData(wallId1);
+			TileData wall2 = GameData.GetTileData(wallId2);
+
+			return Array.Exists(wall1.MergeTileStrIds, s => s == wall2.StrId) ||
+				Array.Exists(wall2.MergeTileStrIds, s => s == wall1.StrId);
+		}
+
+		public void DrawTiles(SpriteBatch spriteBatch)
 		{
 			Camera cam = Main.Camera;
 
@@ -166,6 +228,38 @@ namespace Terrarium
 					{
 						spriteBatch.Draw(GameData.GetWallData(wallId).Texture,
 							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE), Color.White);
+					}
+				}
+			}
+		}
+
+		public void DrawTileMasks(SpriteBatch spriteBatch)
+		{
+			Camera cam = Main.Camera;
+
+			int left = Math.Max(0, cam.Bounds.Left / TileData.TILE_SIZE);
+			int right = Math.Min(Width - 1, cam.Bounds.Right / TileData.TILE_SIZE) + 1;
+			int top = Math.Max(0, cam.Bounds.Top / TileData.TILE_SIZE);
+			int bottom = Math.Min(Height - 1, cam.Bounds.Bottom / TileData.TILE_SIZE) + 1;
+
+			for (int x = left; x < right; x++)
+			{
+				for (int y = top; y < bottom; y++)
+				{
+					int tileId = _tiles[x, y];
+					int wallId = _walls[x, y];
+
+					if (tileId != -1)
+					{
+						spriteBatch.Draw(GameData.TileMasks,
+							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE),
+							_tileMaskRects[GetTileMaskIndex(x, y, tileId)], Color.White);
+					}
+					else if (wallId != -1)
+					{
+						spriteBatch.Draw(GameData.TileMasks,
+							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE),
+							_tileMaskRects[GetWallMaskIndex(x, y, wallId)], Color.White);
 					}
 				}
 			}
