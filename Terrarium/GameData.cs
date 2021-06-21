@@ -11,23 +11,23 @@ namespace Terrarium
 		public static Texture2D TileMasks	{ get; private set; }
 		public static Effect TileMaskEffect { get; private set; }
 
-		static Dictionary<int, TileData> _tileData;
-		static Dictionary<string, int> _tilesStrId;
+		static Dictionary<int, TileData> _blockData;
+		static Dictionary<string, int> _blocksStrId;
 
 		static Dictionary<int, TileData> _wallData;
 		static Dictionary<string, int> _wallsStrId;
 
 		public static void Load(ContentManager content)
 		{
-			_tileData = new Dictionary<int, TileData>();
-			_tilesStrId = new Dictionary<string, int>();
+			_blockData = new Dictionary<int, TileData>();
+			_blocksStrId = new Dictionary<string, int>();
 
 			_wallData = new Dictionary<int, TileData>();
 			_wallsStrId = new Dictionary<string, int>();
 
-			LoadEffects	(content);
+			LoadEffects(content);
 			LoadTextures(content);
-			LoadTileData(content);
+			LoadBlockData(content);
 			LoadWallData(content);
 		}
 
@@ -41,21 +41,21 @@ namespace Terrarium
 			TileMasks = content.Load<Texture2D>("Textures/TileMasks");
 		}
 
-		static void LoadTileData(ContentManager content)
+		static void LoadBlockData(ContentManager content)
 		{
-			string json = File.ReadAllText("Content/GameData/Tiles.json");
-			var tileDictArray = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(json);
+			string json = File.ReadAllText("Content/GameData/Blocks.json");
+			var blockDictArray = JsonConvert.DeserializeObject<Dictionary<string, string>[]>(json);
 
-			foreach (var tileDict in tileDictArray)
+			foreach (var blockDict in blockDictArray)
 			{
-				int id = int.Parse(tileDict["id"]);
+				int id = int.Parse(blockDict["id"]);
 
-				string name = tileDict["name"];
-				string strId = tileDict["strId"];
-				string texturePath = tileDict["texturePath"];
-				string mergeStrIds = tileDict["mergeTiles"];
+				string name = blockDict["name"];
+				string strId = blockDict["strId"];
+				string texturePath = blockDict["texturePath"];
+				string mergeStrIds = blockDict["mergeBlocks"];
 
-				_tileData.Add(
+				_blockData.Add(
 					id,
 					new TileData(
 						name,
@@ -65,7 +65,7 @@ namespace Terrarium
 					)
 				);
 
-				_tilesStrId.Add(
+				_blocksStrId.Add(
 					strId,
 					id
 				);
@@ -103,14 +103,14 @@ namespace Terrarium
 			}
 		}
 
-		public static TileData GetTileData(int id)
+		public static TileData GetBlockData(int id)
 		{
-			return _tileData[id];
+			return _blockData[id];
 		}
 
-		public static int GetTileIdFromStrId(string strId)
+		public static int GetBlockIdFromStrId(string strId)
 		{
-			return _tilesStrId[strId];
+			return _blocksStrId[strId];
 		}
 
 		public static TileData GetWallData(int id)

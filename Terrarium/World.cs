@@ -6,7 +6,7 @@ namespace Terrarium
 {
 	public class World
 	{
-		int[,] _tiles;
+		int[,] _blocks;
 		int[,] _walls;
 
 		const int MIN_GROUND_HEIGHT = 192;
@@ -24,15 +24,15 @@ namespace Terrarium
 			Width = width;
 			Height = height;
 
-			_tiles = new int[Width, Height];
+			_blocks = new int[Width, Height];
 			_walls = new int[Width, Height];
 
-			// Initialze with air tiles/walls
+			// Initialze with air tiles
 			for (int x = 0; x < width; x++)
 			{
 				for (int y = 0; y < height; y++)
 				{
-					_tiles[x, y] = -1;
+					_blocks[x, y] = -1;
 					_walls[x, y] = -1;
 				}
 			}
@@ -56,15 +56,15 @@ namespace Terrarium
 			for (int x = 0; x < Width; x++)
 				elevations[x] = (int)Util.Map(elevationNoise[x, 0], 0f, 1f, minOffset, maxOffset);
 
-			// Fill in tiles/walls
+			// Fill in tiles
 			for (int x = 0; x < Width; x++)
 			{
-				_tiles[x, elevations[x]] = GameData.GetTileIdFromStrId("tile.grass");
+				_blocks[x, elevations[x]] = GameData.GetBlockIdFromStrId("block.grass");
 				_walls[x, elevations[x]] = GameData.GetWallIdFromStrId("wall.dirt");
 
 				for (int y = elevations[x] + 1; y < Height; y++)
 				{
-					_tiles[x, y] = GameData.GetTileIdFromStrId("tile.dirt");
+					_blocks[x, y] = GameData.GetBlockIdFromStrId("block.dirt");
 					_walls[x, y] = GameData.GetWallIdFromStrId("wall.dirt");
 				}
 			}
@@ -77,16 +77,16 @@ namespace Terrarium
 				for (int y = 0; y < Height - minOffset; y++)
 				{
 					if (caveNoise[x, y] > 0.5f && caveNoise[x, y] < 0.6f)
-						_tiles[x, minOffset + y] = -1;
+						_blocks[x, minOffset + y] = -1;
 				}
 			}
 
 			// Create ores
 			for (int i = 0; i < Width * Height / 1200; i++)
-				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.stone"), _rand.Next(3, 5));
+				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetBlockIdFromStrId("block.stone"), _rand.Next(3, 5));
 
 			for (int i = 0; i < Width * Height / 1200; i++)
-				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetTileIdFromStrId("tile.copper"), _rand.Next(3, 5));
+				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetBlockIdFromStrId("block.copper"), _rand.Next(3, 5));
 
 			// Create trees
 			for (int i = 0; i < Width / TREE_DENSITY; i++)
@@ -99,26 +99,26 @@ namespace Terrarium
 			}
 		}
 
-		void CreateOreVein(int x, int y, int tileId, int size)
+		void CreateOreVein(int x, int y, int blockId, int size)
 		{
-			if (GetTile(x, y) == -1 || size <= 0)
+			if (GetBlock(x, y) == -1 || size <= 0)
 				return;
 
 			if (_rand.Next(0, 10) == 0)
 				size += 1;
 
-			_tiles[x, y] = tileId;
+			_blocks[x, y] = blockId;
 
-			CreateOreVein(x + 1, y, tileId, size - 1);
-			CreateOreVein(x - 1, y, tileId, size - 1);
-			CreateOreVein(x, y + 1, tileId, size - 1);
-			CreateOreVein(x, y - 1, tileId, size - 1);
+			CreateOreVein(x + 1, y, blockId, size - 1);
+			CreateOreVein(x - 1, y, blockId, size - 1);
+			CreateOreVein(x, y + 1, blockId, size - 1);
+			CreateOreVein(x, y - 1, blockId, size - 1);
 		}
 
 		void CreateTree(int x, int y, int height)
 		{
-			// Check if has grass tile below
-			if (GetTile(x, y + 1) != GameData.GetTileIdFromStrId("tile.grass"))
+			// Check if has grass block below
+			if (GetBlock(x, y + 1) != GameData.GetBlockIdFromStrId("block.grass"))
 				return;
 
 			int top = y - height - 1;
@@ -143,34 +143,34 @@ namespace Terrarium
 				SetWall(x - i, top - 3, leavesId);
 		}
 
-		int GetTileMaskIndex(int x, int y, int tileId)
+		int GetBlockMaskIndex(int x, int y, int blockId)
 		{
-			// Get adjacent tiles (NWES)
-			int[] adjTiles = new int[] { 0, 0, 0, 0 };
+			// Get adjacent blocks (NWES)
+			int[] adjBlocks = new int[] { 0, 0, 0, 0 };
 
-			if (CanTileMerge(GetTile(x, y - 1), tileId))
-				adjTiles[0] = 1;
-			if (CanTileMerge(GetTile(x - 1, y), tileId))
-				adjTiles[1] = 1;
-			if (CanTileMerge(GetTile(x + 1, y), tileId))
-				adjTiles[2] = 1;
-			if (CanTileMerge(GetTile(x, y + 1), tileId))
-				adjTiles[3] = 1;
+			if (CanBlockMerge(GetBlock(x, y - 1), blockId))
+				adjBlocks[0] = 1;
+			if (CanBlockMerge(GetBlock(x - 1, y), blockId))
+				adjBlocks[1] = 1;
+			if (CanBlockMerge(GetBlock(x + 1, y), blockId))
+				adjBlocks[2] = 1;
+			if (CanBlockMerge(GetBlock(x, y + 1), blockId))
+				adjBlocks[3] = 1;
 
 			// Calculate mask
-			return adjTiles[0] + adjTiles[1] * 2 + adjTiles[2] * 4 + adjTiles[3] * 8;
+			return adjBlocks[0] + adjBlocks[1] * 2 + adjBlocks[2] * 4 + adjBlocks[3] * 8;
 		}
 
-		bool CanTileMerge(int tileId1, int tileId2)
+		bool CanBlockMerge(int blockId1, int blockId2)
 		{
-			if (tileId1 == -1 || tileId2 == -1)
+			if (blockId1 == -1 || blockId2 == -1)
 				return false;
 
-			TileData tile1 = GameData.GetTileData(tileId1);
-			TileData tile2 = GameData.GetTileData(tileId2);
+			TileData block1 = GameData.GetBlockData(blockId1);
+			TileData block2 = GameData.GetBlockData(blockId2);
 
-			return Array.Exists(tile1.MergeTileStrIds, s => s == tile2.StrId) ||
-				Array.Exists(tile2.MergeTileStrIds, s => s == tile1.StrId);
+			return Array.Exists(block1.MergeTileStrIds, s => s == block2.StrId) ||
+				Array.Exists(block2.MergeTileStrIds, s => s == block1.StrId);
 		}
 
 		int GetWallMaskIndex(int x, int y, int wallId)
@@ -216,12 +216,12 @@ namespace Terrarium
 			{
 				for (int y = top; y < bottom; y++)
 				{
-					int tileId = _tiles[x, y];
+					int blockId = _blocks[x, y];
 					int wallId = _walls[x, y];
 
-					if (tileId != -1)
+					if (blockId != -1)
 					{
-						spriteBatch.Draw(GameData.GetTileData(tileId).Texture,
+						spriteBatch.Draw(GameData.GetBlockData(blockId).Texture,
 							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE), Color.White);
 					}
 					else if (wallId != -1)
@@ -246,14 +246,14 @@ namespace Terrarium
 			{
 				for (int y = top; y < bottom; y++)
 				{
-					int tileId = _tiles[x, y];
+					int blockId = _blocks[x, y];
 					int wallId = _walls[x, y];
 
-					if (tileId != -1)
+					if (blockId != -1)
 					{
 						spriteBatch.Draw(GameData.TileMasks,
 							new Vector2(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE),
-							_tileMaskRects[GetTileMaskIndex(x, y, tileId)], Color.White);
+							_tileMaskRects[GetBlockMaskIndex(x, y, blockId)], Color.White);
 					}
 					else if (wallId != -1)
 					{
@@ -265,12 +265,12 @@ namespace Terrarium
 			}
 		}
 
-		public int GetTile(int x, int y)
+		public int GetBlock(int x, int y)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
 				return -1;
 
-			return _tiles[x, y];
+			return _blocks[x, y];
 		}
 
 		public int GetWall(int x, int y)
@@ -281,12 +281,12 @@ namespace Terrarium
 			return _walls[x, y];
 		}
 
-		public void SetTile(int x, int y, int id)
+		public void SetBlock(int x, int y, int id)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
 				return;
 
-			_tiles[x, y] = id;
+			_blocks[x, y] = id;
 		}
 
 		public void SetWall(int x, int y, int id)

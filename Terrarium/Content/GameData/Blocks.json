@@ -1,0 +1,37 @@
+[
+	{
+		"id": 0,
+		"strId": "block.grass",
+		"name": "Grass Block",
+		"mergeBlocks": "block.grass,block.dirt",
+		"texturePath": "Textures/Blocks/Grass"
+	},
+	{
+		"id": 1,
+		"strId": "block.dirt",
+		"name": "Dirt Block",
+		"mergeBlocks": "block.dirt,block.grass",
+		"texturePath": "Textures/Blocks/Dirt"
+	},
+	{
+		"id": 2,
+		"strId": "block.stone",
+		"name": "Stone Block",
+		"mergeBlocks": "block.stone",
+		"texturePath": "Textures/Blocks/Stone"
+	},
+	{
+		"id": 3,
+		"strId": "block.copper",
+		"name": "Copper Block",
+		"mergeBlocks": "block.copper",
+		"texturePath": "Textures/Blocks/Copper"
+	},
+	{
+		"id": 4,
+		"strId": "block.wood",
+		"name": "Wood Block",
+		"mergeBlocks": "block.wood,block.grass,block.dirt",
+		"texturePath": "Textures/Blocks/Wood"
+	}
+]

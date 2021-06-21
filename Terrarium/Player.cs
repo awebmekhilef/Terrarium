@@ -8,7 +8,7 @@ namespace Terrarium
 		World _world;
 		Camera _cam;
 
-		int _currTileId = 1;
+		int _currBlockId = 1;
 		int _currWallId = 0;
 
 		public Player()
@@ -23,25 +23,25 @@ namespace Terrarium
 			Point tilePos = new Point((int)(mousePos.X / TileData.TILE_SIZE), (int)(mousePos.Y / TileData.TILE_SIZE));
 
 			// Place/remove tiles
-			if (Input.IsMouseButtonHeld(MouseButton.Left) && _world.GetTile(tilePos.X, tilePos.Y) == -1)
-				_world.SetTile(tilePos.X, tilePos.Y, _currTileId);
+			if (Input.IsMouseButtonHeld(MouseButton.Left) && _world.GetBlock(tilePos.X, tilePos.Y) == -1)
+				_world.SetBlock(tilePos.X, tilePos.Y, _currBlockId);
 			else if (Input.IsMouseButtonHeld(MouseButton.Right) && _world.GetWall(tilePos.X, tilePos.Y) == -1)
 				_world.SetWall(tilePos.X, tilePos.Y, _currWallId);
 			else if(Input.IsMouseButtonDown(MouseButton.Middle))
 			{
-				if (_world.GetTile(tilePos.X, tilePos.Y) != -1)
-					_world.SetTile(tilePos.X, tilePos.Y, -1);
+				if (_world.GetBlock(tilePos.X, tilePos.Y) != -1)
+					_world.SetBlock(tilePos.X, tilePos.Y, -1);
 				else
 					_world.SetWall(tilePos.X, tilePos.Y, -1);
 			}
 
-			// Select current tile
+			// Select current block
 			if (Input.IsKeyDown(Keys.D1))
-				_currTileId = GameData.GetTileIdFromStrId("tile.dirt");
+				_currBlockId = GameData.GetBlockIdFromStrId("block.dirt");
 			else if (Input.IsKeyDown(Keys.D2))
-				_currTileId = GameData.GetTileIdFromStrId("tile.stone");
+				_currBlockId = GameData.GetBlockIdFromStrId("block.stone");
 			else if (Input.IsKeyDown(Keys.D3))
-				_currTileId = GameData.GetTileIdFromStrId("tile.wood");
+				_currBlockId = GameData.GetBlockIdFromStrId("block.wood");
 
 			// Select current wall
 			if (Input.IsKeyDown(Keys.D4))

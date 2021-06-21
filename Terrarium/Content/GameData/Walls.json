@@ -3,14 +3,14 @@
 		"id": 0,
 		"strId": "wall.dirt",
 		"name": "Dirt Wall",
-		"mergeWalls": "wall.dirt",
+		"mergeWalls": "wall.dirt,wall.wood",
 		"texturePath": "Textures/Walls/Dirt"
 	},
 	{
 		"id": 1,
 		"strId": "wall.trunk",
 		"name": "Trunk",
-		"mergeWalls": "wall.trunk,wall.leaves,wall.dirt",
+		"mergeWalls": "wall.trunk,wall.leaves",
 		"texturePath": "Textures/Walls/Trunk"
 	},
 	{
