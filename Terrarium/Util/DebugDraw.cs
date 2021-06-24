@@ -16,7 +16,7 @@ namespace Terrarium
 		public static void Draw(SpriteBatch spriteBatch)
 		{
 			foreach (var rect in _rects)
-				spriteBatch.DrawRectangle(rect.Key, rect.Value);
+				spriteBatch.DrawRectangle(rect.Key, rect.Value, 1f);
 
 			_rects.Clear();
 		}

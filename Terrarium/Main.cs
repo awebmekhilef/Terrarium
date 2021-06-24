@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+// TODO: Random tiles, Player controller, Items, UI
 namespace Terrarium
 {
 	public class Main : Game

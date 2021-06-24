@@ -31,7 +31,7 @@ namespace Terrarium
 			{
 				if (_world.GetBlock(tilePos.X, tilePos.Y) != -1)
 					_world.SetBlock(tilePos.X, tilePos.Y, -1);
-				else
+				else if (_world.GetWall(tilePos.X, tilePos.Y) != -1)
 					_world.SetWall(tilePos.X, tilePos.Y, -1);
 			}
 

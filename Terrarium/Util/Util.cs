@@ -16,6 +16,11 @@ namespace Terrarium
 			return (v - a) / (b - a);
 		}
 
+		public static bool IsBetween(int v, int a, int b)
+		{
+			return v >= a && v < b;
+		}
+
 		public static Vector2 GetIntersectionDepth(Rectangle rectA, Rectangle rectB)
 		{
 			Vector2 halfSizeA = new Vector2(rectA.Width / 2f, rectA.Height / 2f);
