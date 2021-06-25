@@ -5,6 +5,10 @@ namespace Terrarium
 	{
 		static OpenSimplexNoise _simplexNoise = new OpenSimplexNoise();
 
+		/// <summary>
+		/// Generates a 2D noise map with the given settings.
+		/// Values returned are between 0 and 1.
+		/// </summary>
 		public static float[,] GenerateNoiseMap(int width, int height, float scale, int octaves, float persistance, float lacunarity)
 		{
 			float[,] noiseMap = new float[width, height];

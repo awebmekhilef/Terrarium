@@ -20,6 +20,9 @@ namespace Terrarium
 		const int MAX_GROUND_HEIGHT = 256;
 		const int TREE_DENSITY = 5;
 
+		/// <summary>
+		/// Creates a new world with a given width and height
+		/// </summary>
 		public World(int width, int height)
 		{
 			Width = width;
@@ -46,6 +49,9 @@ namespace Terrarium
 			GenerateWorld();
 		}
 
+		/// <summary>
+		/// Generates elevations, caves, ores and trees
+		/// </summary>
 		void GenerateWorld()
 		{
 			// Offsets from top
@@ -60,15 +66,19 @@ namespace Terrarium
 				elevations[x] = (int)Util.Map(elevationNoise[x, 0], 0f, 1f, minOffset, maxOffset);
 
 			// Fill in tiles
+			int grassId = GameData.GetBlockIdFromStrId("block.grass");
+			int dirtBlockId = GameData.GetBlockIdFromStrId("block.dirt");
+			int dirtWallId = GameData.GetWallIdFromStrId("wall.dirt");
+
 			for (int x = 0; x < Width; x++)
 			{
-				SetBlock(x, elevations[x], GameData.GetBlockIdFromStrId("block.grass"));
-				SetWall(x, elevations[x], GameData.GetWallIdFromStrId("wall.dirt"));
+				SetBlock(x, elevations[x], grassId);
+				SetWall(x, elevations[x], dirtWallId);
 
 				for (int y = elevations[x] + 1; y < Height; y++)
 				{
-					SetBlock(x, y, GameData.GetBlockIdFromStrId("block.dirt"));
-					SetWall(x, y, GameData.GetWallIdFromStrId("wall.dirt"));
+					SetBlock(x, y, dirtBlockId);
+					SetWall(x, y, dirtWallId);
 				}
 			}
 
@@ -85,11 +95,14 @@ namespace Terrarium
 			}
 
 			// Create ores
-			for (int i = 0; i < Width * Height / 1200; i++)
-				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetBlockIdFromStrId("block.stone"), _rand.Next(3, 5));
+			int stoneId = GameData.GetBlockIdFromStrId("block.stone");
+			int copperId = GameData.GetBlockIdFromStrId("block.copper");
 
 			for (int i = 0; i < Width * Height / 1200; i++)
-				CreateOreVein(_rand.Next(0, Width), _rand.Next(minOffset, Height), GameData.GetBlockIdFromStrId("block.copper"), _rand.Next(3, 5));
+				CreateOreCluster(_rand.Next(0, Width), _rand.Next(minOffset, Height), _rand.Next(3, 5), stoneId);
+
+			for (int i = 0; i < Width * Height / 1200; i++)
+				CreateOreCluster(_rand.Next(0, Width), _rand.Next(minOffset, Height), _rand.Next(3, 5), copperId);
 
 			// Create trees
 			for (int i = 0; i < Width / TREE_DENSITY; i++)
@@ -102,7 +115,10 @@ namespace Terrarium
 			}
 		}
 
-		void CreateOreVein(int x, int y, int blockId, int size)
+		/// <summary>
+		/// Recursively creates an ore cluster at a given starting position and size
+		/// </summary>
+		void CreateOreCluster(int x, int y, int size, int blockId)
 		{
 			if (GetBlock(x, y) == -1 || size <= 0)
 				return;
@@ -112,12 +128,15 @@ namespace Terrarium
 
 			SetBlock(x, y, blockId);
 
-			CreateOreVein(x + 1, y, blockId, size - 1);
-			CreateOreVein(x - 1, y, blockId, size - 1);
-			CreateOreVein(x, y + 1, blockId, size - 1);
-			CreateOreVein(x, y - 1, blockId, size - 1);
+			CreateOreCluster(x + 1, y, size - 1, blockId);
+			CreateOreCluster(x - 1, y, size - 1, blockId);
+			CreateOreCluster(x, y + 1, size - 1, blockId);
+			CreateOreCluster(x, y - 1, size - 1, blockId);
 		}
 
+		/// <summary>
+		/// Creates a tree at a position with a given height
+		/// </summary>
 		void CreateTree(int x, int y, int height)
 		{
 			// Check if has grass block below
@@ -146,6 +165,10 @@ namespace Terrarium
 				SetWall(x - i, top - 3, leavesId);
 		}
 
+		/// <summary>
+		/// Updates the _tileMasks array at a particular position based on the calculated bitmask.
+		/// Optionally updates the tiles around it.
+		/// </summary>
 		void UpdateTileMasks(int x, int y, bool updateAdjacent = true)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
@@ -154,6 +177,7 @@ namespace Terrarium
 			int blockId = GetBlock(x, y);
 			int wallId = GetWall(x, y);
 
+			// Blocks get priority over walls for tilemasks
 			if (blockId != -1)
 				_tileMasks[x, y] = GetMaskIndex(GetBlockBitmask(x, y, blockId));
 			else if (wallId != -1)
@@ -161,6 +185,7 @@ namespace Terrarium
 			else
 				_tileMasks[x, y] = -1;
 
+			// Update adjacent tiles
 			if (updateAdjacent)
 			{
 				UpdateTileMasks(x - 1, y, false);
@@ -170,6 +195,9 @@ namespace Terrarium
 			}
 		}
 
+		/// <summary>
+		/// Calculates a bitmask based on the block id, its position and the mergeable block adjacent to it
+		/// </summary>
 		int GetBlockBitmask(int x, int y, int blockId)
 		{
 			// Get adjacent blocks (NWES)
@@ -188,6 +216,9 @@ namespace Terrarium
 			return adjBlocks[0] + adjBlocks[1] * 2 + adjBlocks[2] * 4 + adjBlocks[3] * 8;
 		}
 
+		/// <summary>
+		/// Checks whether two block ids can merge
+		/// </summary>
 		bool CanBlockMerge(int blockId1, int blockId2)
 		{
 			if (blockId1 == -1 || blockId2 == -1)
@@ -200,6 +231,9 @@ namespace Terrarium
 				Array.Exists(block2.MergeTileStrIds, s => s == block1.StrId);
 		}
 
+		/// <summary>
+		/// Calculates a bitmask based on the wall id, its position and the mergeable walls adjacent to it
+		/// </summary>
 		int GetWallBitmask(int x, int y, int wallId)
 		{
 			// Get adjacent walls (NWES)
@@ -218,6 +252,9 @@ namespace Terrarium
 			return adjWalls[0] + adjWalls[1] * 2 + adjWalls[2] * 4 + adjWalls[3] * 8;
 		}
 
+		/// <summary>
+		/// Checks whether two wall ids can merge
+		/// </summary>
 		bool CanWallMerge(int wallId1, int wallId2)
 		{
 			if (wallId1 == -1 || wallId2 == -1)
@@ -230,11 +267,17 @@ namespace Terrarium
 				Array.Exists(wall2.MergeTileStrIds, s => s == wall1.StrId);
 		}
 
+		/// <summary>
+		/// Calculates a random index in the _tileMaskRects array based on a given bitmask
+		/// </summary>
 		int GetMaskIndex(int bitmask)
 		{
 			return (bitmask * 3) + _rand.Next(0, 3);
 		}
 
+		/// <summary>
+		/// Draws visible blocks and walls that are within the camera bounds.
+		/// </summary>
 		public void DrawTiles(SpriteBatch spriteBatch)
 		{
 			Rectangle bounds = Main.Camera.Bounds;
@@ -265,6 +308,9 @@ namespace Terrarium
 			}
 		}
 
+		/// <summary>
+		/// Draws tilemasks that within the camera bounds
+		/// </summary>
 		public void DrawTileMasks(SpriteBatch spriteBatch)
 		{
 			Rectangle bounds = Main.Camera.Bounds;
@@ -290,6 +336,10 @@ namespace Terrarium
 			}
 		}
 
+		/// <summary>
+		/// Gets the block id at a particular position.
+		/// Returns -1 if the position is out bounds.
+		/// </summary>
 		public int GetBlock(int x, int y)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
@@ -298,6 +348,10 @@ namespace Terrarium
 			return _blocks[x, y];
 		}
 
+		/// <summary>
+		/// Gets the wall id at a particular position.
+		/// Returns -1 if the position is out bounds.
+		/// </summary>
 		public int GetWall(int x, int y)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
@@ -306,6 +360,10 @@ namespace Terrarium
 			return _walls[x, y];
 		}
 
+		/// <summary>
+		/// Sets the block id at a particular position and updates tile masks.
+		/// Returns if the position is out bounds.
+		/// </summary>
 		public void SetBlock(int x, int y, int id)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
@@ -316,6 +374,10 @@ namespace Terrarium
 			UpdateTileMasks(x, y);
 		}
 
+		/// <summary>
+		/// Sets the wall id at a particular position and updates tile masks.
+		/// Returns if the position is out bounds.
+		/// </summary>
 		public void SetWall(int x, int y, int id)
 		{
 			if (x < 0 || x >= Width || y < 0 || y >= Height)
