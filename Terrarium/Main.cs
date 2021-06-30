@@ -21,9 +21,6 @@ namespace Terrarium
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
-
-			IsFixedTimeStep = false;
-			_graphics.SynchronizeWithVerticalRetrace = false;
 		}
 
 		protected override void Initialize()
@@ -31,8 +28,11 @@ namespace Terrarium
 			base.Initialize();
 
 			World = new World(512, 512);
-			Camera = new Camera(new Vector2(World.Width * TileData.TILE_SIZE / 2f, World.Height * TileData.TILE_SIZE / 2f));
-			Player = new Player();
+
+			Vector2 worldCenter = new Vector2(World.Width * TileData.TILE_SIZE / 2f, World.Height * TileData.TILE_SIZE / 2f);
+
+			Camera = new Camera(worldCenter, 2.5f);
+			Player = new Player(worldCenter);
 
 			_tileRT = new RenderTarget2D(GraphicsDevice, 1280, 720, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
 			_tileMaskRT = new RenderTarget2D(GraphicsDevice, 1280, 720, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
@@ -58,7 +58,7 @@ namespace Terrarium
 
 			Input.Update();
 
-			Player.Update();
+			Player.Update(dt);
 			Camera.Update(dt);
 
 			Window.Title = $"{1f / dt}";
@@ -97,7 +97,7 @@ namespace Terrarium
 			GraphicsDevice.SetRenderTarget(null);
 			GraphicsDevice.Clear(Color.LightSkyBlue);
 
-			_spriteBatch.Begin(effect: GameData.TileMaskEffect);
+			_spriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: GameData.TileMaskEffect);
 
 			GameData.TileMaskEffect.Parameters["Mask"].SetValue(_tileMaskRT);
 
@@ -109,7 +109,9 @@ namespace Terrarium
 
 			#region Draw Others
 
-			_spriteBatch.Begin(transformMatrix: Camera.TransformMatrix);
+			_spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Camera.TransformMatrix);
+
+			Player.Draw(_spriteBatch);
 
 			DebugDraw.Draw(_spriteBatch);
 

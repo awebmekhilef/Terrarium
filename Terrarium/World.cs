@@ -387,5 +387,13 @@ namespace Terrarium
 
 			UpdateTileMasks(x, y);
 		}
+
+		/// <summary>
+		/// Get the bounding rectangle of a tile
+		/// </summary>
+		public Rectangle GetTileBounds(int x, int y)
+		{
+			return new Rectangle(x * TileData.TILE_SIZE, y * TileData.TILE_SIZE, TileData.TILE_SIZE, TileData.TILE_SIZE);
+		}
 	}
 }
