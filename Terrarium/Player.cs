@@ -58,10 +58,10 @@ namespace Terrarium
 			_prevPos = _pos;
 
 			_pos.X += _vel.X * dt;
-			HandleCollisionsX();
+			HandleCollision(CollisionDirection.Horizontal);
 
 			_pos.Y += _vel.Y * dt;
-			HandleCollisionsY();
+			HandleCollision(CollisionDirection.Vertical);
 
 			// Reset velocity if colliding
 			if (_prevPos.X == _pos.X)
@@ -91,43 +91,14 @@ namespace Terrarium
 			#endregion
 		}
 
-		void HandleCollisionsX()
+		public void Draw(SpriteBatch spriteBatch)
 		{
-			RectangleF bounds = Bounds;
-			RectangleF prevBounds = new RectangleF(_prevPos, bounds.Size);
-
-			int left = (int)bounds.Left / TileData.TILE_SIZE;
-			int right = (int)bounds.Right / TileData.TILE_SIZE;
-			int top = (int)bounds.Top / TileData.TILE_SIZE;
-			int bottom = (int)bounds.Bottom / TileData.TILE_SIZE;
-
-			for (int x = left; x <= right; x++)
-			{
-				for (int y = top; y <= bottom; y++)
-				{
-					if (_world.GetBlock(x, y) == -1)
-						continue;
-
-					RectangleF tileBounds = (RectangleF)_world.GetTileBounds(x, y);
-
-					if (bounds.Intersects(tileBounds))
-					{
-						// Was previously to left of block
-						if (prevBounds.Right <= tileBounds.Left)
-							_pos.X = tileBounds.Left - bounds.Width;
-
-						// Was previoulsy below block
-						if (prevBounds.Left >= tileBounds.Right)
-							_pos.X = tileBounds.Right;
-					}
-				}
-			}
+			spriteBatch.FillRectangle(Bounds.Location, Bounds.Size, Color.White);
 		}
 
-		void HandleCollisionsY()
+		void HandleCollision(CollisionDirection direction)
 		{
 			RectangleF bounds = Bounds;
-			RectangleF prevBounds = new RectangleF(_prevPos, bounds.Size);
 
 			int left = (int)bounds.Left / TileData.TILE_SIZE;
 			int right = (int)bounds.Right / TileData.TILE_SIZE;
@@ -147,25 +118,27 @@ namespace Terrarium
 
 					if (bounds.Intersects(tileBounds))
 					{
-						// Was previously above block
-						if (prevBounds.Bottom <= tileBounds.Top)
-						{
-							_pos.Y = tileBounds.Top - bounds.Height;
+						Vector2 depth = Util.GetIntersectionDepth(bounds, tileBounds);
 
-							_isGrounded = true;
+						if (direction == CollisionDirection.Horizontal)
+							_pos.X += depth.X;
+						else
+						{
+							_pos.Y += depth.Y;
+
+							if (depth.Y <= 0)
+								_isGrounded = true;
 						}
 
-						// Was previoulsy below block
-						if (prevBounds.Top >= tileBounds.Bottom)
-							_pos.Y = tileBounds.Bottom;
+						bounds = Bounds;
 					}
 				}
 			}
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
+		enum CollisionDirection
 		{
-			spriteBatch.FillRectangle(Bounds.Location, Bounds.Size, Color.White);
+			Horizontal, Vertical
 		}
 	}
 }
