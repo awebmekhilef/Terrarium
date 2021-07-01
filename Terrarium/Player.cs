@@ -7,13 +7,20 @@ namespace Terrarium
 	public class Player
 	{
 		public RectangleF Bounds
-			=> new RectangleF(_pos.X, _pos.Y, 12, 23);
+			=> new RectangleF(_pos + LocalBounds.Location, LocalBounds.Size);
+
+		public RectangleF LocalBounds
+			=> new RectangleF(3, 0, 10, 24);
 
 		Vector2 _prevPos;
 		Vector2 _pos;
 		Vector2 _vel;
 
 		bool _isGrounded;
+		bool _flip;
+
+		AnimationPlayer _animPlayer;
+		string _currAnim;
 
 		World _world;
 		Camera _cam;
@@ -26,6 +33,16 @@ namespace Terrarium
 		public Player(Vector2 position)
 		{
 			_pos = position;
+
+			Rectangle[] frames = Util.RectsFromTexture(GameData.Player, 16, 24);
+
+			_animPlayer = new AnimationPlayer();
+
+			_animPlayer.Add("Idle", new Animation(true, 1, frames[0]));
+			_animPlayer.Add("Jump", new Animation(true, 1, frames[1]));
+			_animPlayer.Add("Run", new Animation(true, 20, frames[2..15]));
+
+			_currAnim = "Idle";
 
 			_world = Main.World;
 			_cam = Main.Camera;
@@ -41,9 +58,15 @@ namespace Terrarium
 
 			// Horizontal movement
 			if (Input.IsKeyHeld(Keys.A))
+			{
 				_vel.X = -MOVE_SPEED;
+				_flip = true;
+			}
 			else if (Input.IsKeyHeld(Keys.D))
+			{
 				_vel.X = MOVE_SPEED;
+				_flip = false;
+			}
 			else
 				_vel.X = 0f;
 
@@ -89,11 +112,31 @@ namespace Terrarium
 			}
 
 			#endregion
+
+			#region Animations
+
+			if (!_animPlayer.IsPlaying(_currAnim))
+				_animPlayer.Play(_currAnim);
+
+			if (_isGrounded)
+			{
+				if (_vel.X != 0f)
+					_currAnim = "Run";
+				else
+					_currAnim = "Idle";
+			}
+			else
+				_currAnim = "Jump";
+
+			_animPlayer.Update(dt);
+
+			#endregion
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.FillRectangle(Bounds.Location, Bounds.Size, Color.White);
+			spriteBatch.Draw(GameData.Player, _pos, _animPlayer.GetFrameBounds(), Color.White,
+				0f, Vector2.Zero, 1f, _flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 		}
 
 		void HandleCollision(CollisionDirection direction)

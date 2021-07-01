@@ -9,6 +9,8 @@ namespace Terrarium
 	public static class GameData
 	{
 		public static Texture2D TileMasks	{ get; private set; }
+		public static Texture2D Player		{ get; private set; }
+
 		public static Effect TileMaskEffect { get; private set; }
 
 		static Dictionary<int, TileData> _blockData;
@@ -39,6 +41,7 @@ namespace Terrarium
 		static void LoadTextures(ContentManager content)
 		{
 			TileMasks = content.Load<Texture2D>("Textures/TileMasks");
+			Player = content.Load<Texture2D>("Textures/Player");
 		}
 
 		static void LoadBlockData(ContentManager content)
