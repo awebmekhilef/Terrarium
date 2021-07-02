@@ -149,7 +149,18 @@ namespace Terrarium
 
 			// Create trunk
 			for (int i = y; i >= top; i--)
+			{
 				SetWall(x, i, trunkId);
+
+				// Place random side leaves
+				if (_rand.Next(0, 5) == 0 && Util.IsBetween(i, top + 2, y - 1))
+				{
+					if (_rand.Next(0, 2) == 0)
+						SetWall(x - 1, i, leavesId);
+					else
+						SetWall(x + 1, i, leavesId);
+				}
+			}
 
 			// Create canopy
 			SetWall(x - 1, top, leavesId);

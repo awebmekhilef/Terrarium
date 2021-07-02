@@ -30,7 +30,7 @@ namespace Terrarium
 
 		const float GRAVITY = 700;
 		const float MOVE_SPEED = 100;
-		const float JUMP_FORCE = 250;
+		const float JUMP_FORCE = 275;
 		const float MAX_FALL_SPEED = 400;
 
 		/// <summary>
