@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Terrarium
 {
+	/// <summary>
+	/// The brave adventurer!
+	/// </summary>
 	public class Player
 	{
 		public RectangleF Bounds
@@ -30,6 +33,9 @@ namespace Terrarium
 		const float JUMP_FORCE = 250;
 		const float MAX_FALL_SPEED = 400;
 
+		/// <summary>
+		/// Spawns a player at a position and sets up animations.
+		/// </summary>
 		public Player(Vector2 position)
 		{
 			_pos = position;
@@ -48,6 +54,9 @@ namespace Terrarium
 			_cam = Main.Camera;
 		}
 
+		/// <summary>
+		/// Updates player movement, tile placing and animation
+		/// </summary>
 		public void Update(float dt)
 		{
 			#region Movement and Collisons
@@ -133,12 +142,18 @@ namespace Terrarium
 			#endregion
 		}
 
+		/// <summary>
+		/// Draws the player
+		/// </summary>
 		public void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(GameData.Player, _pos, _animPlayer.GetFrameBounds(), Color.White,
 				0f, Vector2.Zero, 1f, _flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 		}
 
+		/// <summary>
+		/// Displace the player in the given direction based on intersection depth
+		/// </summary>
 		void HandleCollision(CollisionDirection direction)
 		{
 			RectangleF bounds = Bounds;

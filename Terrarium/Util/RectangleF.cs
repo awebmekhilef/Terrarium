@@ -2,6 +2,9 @@
 
 namespace Terrarium
 {
+	/// <summary>
+	/// Represents a 2D float rectangle
+	/// </summary>
 	public struct RectangleF
 	{
 		public float X;
