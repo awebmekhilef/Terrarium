@@ -1,15 +1,22 @@
 ﻿#if OPENGL
+#define SV_POSITION POSITION
 #define VS_SHADERMODEL vs_3_0
 #define PS_SHADERMODEL ps_3_0
 #else
-#define VS_SHADERMODEL vs_4_0
-#define PS_SHADERMODEL ps_4_0
+#define VS_SHADERMODEL vs_4_0_level_9_1
+#define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-sampler TextureSampler : register(s0);
-Texture2D Mask;
-sampler MaskSampler{
-	Texture = (Mask);
+Texture2D SpriteTexture;
+sampler2D SpriteTextureSampler = sampler_state
+{
+	Texture = <SpriteTexture>;
+};
+
+Texture2D MaskTexture;
+sampler2D MaskTextureSampler = sampler_state
+{
+	Texture = <MaskTexture>;
 	MagFilter = POINT;
 	MinFilter = POINT;
 	Mipfilter = POINT;
@@ -17,21 +24,25 @@ sampler MaskSampler{
 	AddressV = CLAMP;
 };
 
-struct PixelInput {
-	float4 Position : SV_Position0;
+struct VertexShaderOutput
+{
+	float4 Position : SV_POSITION;
 	float4 Color : COLOR0;
-	float4 TexCoord : TEXCOORD0;
+	float2 TextureCoordinates : TEXCOORD0;
 };
 
-float4 SpritePixelShader(PixelInput p) : COLOR0{
-	float4 diffuse = tex2D(TextureSampler, p.TexCoord.xy);
-	float4 mask = tex2D(MaskSampler, p.TexCoord.xy);
+float4 MainPS(VertexShaderOutput input) : COLOR
+{
+	float4 color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
+	float4 mask = tex2D(MaskTextureSampler, input.TextureCoordinates) * input.Color;
 
-	return diffuse * mask;
+	return color * mask;
 }
 
-technique SpriteBatch {
-	pass {
-		PixelShader = compile PS_SHADERMODEL SpritePixelShader();
+technique SpriteDrawing
+{
+	pass P0
+	{
+		PixelShader = compile PS_SHADERMODEL MainPS();
 	}
-}
+};

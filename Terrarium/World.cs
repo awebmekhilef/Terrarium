@@ -16,8 +16,8 @@ namespace Terrarium
 		Random _rand;
 		Rectangle[] _tileMaskRects;
 
-		const int MIN_GROUND_HEIGHT = 192;
-		const int MAX_GROUND_HEIGHT = 256;
+		const int MIN_GROUND_HEIGHT = 16;
+		const int MAX_GROUND_HEIGHT = 64;
 		const int TREE_DENSITY = 5;
 
 		/// <summary>

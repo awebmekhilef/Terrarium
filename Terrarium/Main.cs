@@ -27,15 +27,17 @@ namespace Terrarium
 		{
 			base.Initialize();
 
-			World = new World(512, 512);
+			World = new World(128, 128);
 
 			Vector2 worldCenter = new Vector2(World.Width * TileData.TILE_SIZE / 2f, World.Height * TileData.TILE_SIZE / 2f);
 
-			Camera = new Camera(worldCenter, 2.5f);
+			Camera = new Camera(worldCenter, 3f);
 			Player = new Player(worldCenter);
 
-			_tileRT = new RenderTarget2D(GraphicsDevice, 1280, 720, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
-			_tileMaskRT = new RenderTarget2D(GraphicsDevice, 1280, 720, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
+			PresentationParameters pp = GraphicsDevice.PresentationParameters;
+
+			_tileRT = new RenderTarget2D(GraphicsDevice, 1280, 720, false, pp.BackBufferFormat, DepthFormat.None);
+			_tileMaskRT = new RenderTarget2D(GraphicsDevice, 1280, 720, false, pp.BackBufferFormat, DepthFormat.None);
 
 			_graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
@@ -91,7 +93,7 @@ namespace Terrarium
 			_spriteBatch.End();
 
 			#endregion
-
+			
 			#region Draw Masking Effect
 
 			GraphicsDevice.SetRenderTarget(null);
