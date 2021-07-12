@@ -46,7 +46,7 @@ namespace Terrarium
 
 			_animPlayer.Add("Idle", new Animation(true, 1, frames[0]));
 			_animPlayer.Add("Jump", new Animation(true, 1, frames[1]));
-			_animPlayer.Add("Run", new Animation(true, 20, frames[2..15]));
+			_animPlayer.Add("Run", new Animation(true, 20, frames[2..16]));
 
 			_currAnim = "Idle";
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -93,7 +93,7 @@ namespace Terrarium
 			_spriteBatch.End();
 
 			#endregion
-			
+
 			#region Draw Masking Effect
 
 			GraphicsDevice.SetRenderTarget(null);
@@ -101,7 +101,7 @@ namespace Terrarium
 
 			_spriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: GameData.TileMaskEffect);
 
-			GameData.TileMaskEffect.Parameters["Mask"].SetValue(_tileMaskRT);
+			GameData.TileMaskEffect.Parameters["MaskTexture"].SetValue(_tileMaskRT);
 
 			_spriteBatch.Draw(_tileRT, Vector2.Zero, Color.White);
 

@@ -45,7 +45,11 @@ namespace Terrarium
 					if (_currAnimation.Loop)
 						_currFrame = 0;
 					else
+					{
 						_state = AnimationState.Completed;
+						_currFrame = _currAnimation.Frames.Length - 1;
+						return;
+					}
 				}
 
 				_timeElapsed = 0f;

@@ -31,11 +31,11 @@ namespace Terrarium
 		{
 			// Zooming
 			if (Input.IsKeyDown(Keys.OemPlus))
-				_zoom += 0.25f;
+				_zoom += 0.2f;
 			else if (Input.IsKeyDown(Keys.OemMinus))
-				_zoom -= 0.25f;
+				_zoom -= 0.2f;
 
-			_zoom = MathHelper.Clamp(_zoom, 0.25f, 5f);
+			_zoom = MathHelper.Clamp(_zoom, 1f, 5f);
 
 			// Follow player
 			_pos = Main.Player.Bounds.Center;

@@ -12,10 +12,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin GameData/Walls.json
-/copy:GameData/Walls.json
-
-#begin Textures/Walls/Dirt.png
+#begin Textures/Player.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -25,31 +22,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Walls/Dirt.png
-
-#begin Textures/Walls/Trunk.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/Walls/Trunk.png
-
-#begin Textures/Walls/Leaves.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/Walls/Leaves.png
+/build:Textures/Player.png
 
 #begin Textures/TileMasks.png
 /importer:TextureImporter
@@ -62,26 +35,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/TileMasks.png
-
-#begin Effects/TileMaskEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/build:Effects/TileMaskEffect.fx
-
-#begin Textures/Walls/Wood.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/Walls/Wood.png
-
-#begin GameData/Blocks.json
-/copy:GameData/Blocks.json
 
 #begin Textures/Blocks/Copper.png
 /importer:TextureImporter
@@ -143,7 +96,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Blocks/Wood.png
 
-#begin Textures/Player.png
+#begin Textures/Walls/Dirt.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -153,4 +106,51 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/Player.png
+/build:Textures/Walls/Dirt.png
+
+#begin Textures/Walls/Leaves.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Walls/Leaves.png
+
+#begin Textures/Walls/Trunk.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Walls/Trunk.png
+
+#begin Textures/Walls/Wood.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Walls/Wood.png
+
+#begin Effects/TileMaskEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/TileMaskEffect.fx
+
+#begin GameData/Blocks.json
+/copy:GameData/Blocks.json
+
+#begin GameData/Walls.json
+/copy:GameData/Walls.json
