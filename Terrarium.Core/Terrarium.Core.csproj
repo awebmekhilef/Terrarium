@@ -12,4 +12,8 @@
   <ItemGroup>
     <MGCBContentReferences Remove="Content\Content.mgcb" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\Content.mgcb" />
+    <None Remove="Content\Content.npl" />
+  </ItemGroup>
 </Project>
