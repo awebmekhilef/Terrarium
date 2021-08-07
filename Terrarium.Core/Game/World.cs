@@ -291,12 +291,12 @@ namespace Terrarium
 		/// </summary>
 		public void DrawTiles(SpriteBatch spriteBatch)
 		{
-			Rectangle bounds = Main.Camera.Bounds;
+			RectangleF bounds = Main.Camera.Bounds;
 
-			int left = Math.Max(0, bounds.Left / TileData.TILE_SIZE);
-			int right = Math.Min(Width - 1, bounds.Right / TileData.TILE_SIZE) + 1;
-			int top = Math.Max(0, bounds.Top / TileData.TILE_SIZE);
-			int bottom = Math.Min(Height - 1, bounds.Bottom / TileData.TILE_SIZE) + 1;
+			int left = (int)Math.Max(0, bounds.Left / TileData.TILE_SIZE);
+			int right = (int)(Math.Min(Width - 1, bounds.Right / TileData.TILE_SIZE) + 1);
+			int top = (int)Math.Max(0, bounds.Top / TileData.TILE_SIZE);
+			int bottom = (int)(Math.Min(Height - 1, bounds.Bottom / TileData.TILE_SIZE) + 1);
 
 			for (int x = left; x < right; x++)
 			{
@@ -324,12 +324,12 @@ namespace Terrarium
 		/// </summary>
 		public void DrawTileMasks(SpriteBatch spriteBatch)
 		{
-			Rectangle bounds = Main.Camera.Bounds;
+			RectangleF bounds = Main.Camera.Bounds;
 
-			int left = Math.Max(0, bounds.Left / TileData.TILE_SIZE);
-			int right = Math.Min(Width - 1, bounds.Right / TileData.TILE_SIZE) + 1;
-			int top = Math.Max(0, bounds.Top / TileData.TILE_SIZE);
-			int bottom = Math.Min(Height - 1, bounds.Bottom / TileData.TILE_SIZE) + 1;
+			int left = (int)Math.Max(0, bounds.Left / TileData.TILE_SIZE);
+			int right = (int)(Math.Min(Width - 1, bounds.Right / TileData.TILE_SIZE) + 1);
+			int top = (int)Math.Max(0, bounds.Top / TileData.TILE_SIZE);
+			int bottom = (int)(Math.Min(Height - 1, bounds.Bottom / TileData.TILE_SIZE) + 1);
 
 			for (int x = left; x < right; x++)
 			{

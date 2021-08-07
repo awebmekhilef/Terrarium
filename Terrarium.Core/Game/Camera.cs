@@ -10,12 +10,12 @@ namespace Terrarium
 				Matrix.CreateScale(_zoom) *
 				Matrix.CreateTranslation(new Vector3(1280 / 2, 720 / 2, 0));
 
-		public Rectangle Bounds
-			=> new Rectangle(
-				(int)(_pos.X - 1280 * 1f / _zoom / 2),
-				(int)(_pos.Y - 720 * 1f / _zoom / 2),
-				(int)(1280 * 1f / _zoom),
-				(int)(720 * 1f / _zoom)
+		public RectangleF Bounds
+			=> new RectangleF(
+				_pos.X - 1280 * 1f / _zoom / 2,
+				_pos.Y - 720 * 1f / _zoom / 2,
+				1280 * 1f / _zoom,
+				720 * 1f / _zoom
 			);
 
 		Vector2 _pos;
